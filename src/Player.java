@@ -90,13 +90,13 @@ public class Player {
 	
 	// bottom rectangle checks collision with platforms
 	public Rectangle getRectBottom() {
-		Rectangle r = new Rectangle(xPos + 20, yPos + height, 10, 1);
+		Rectangle r = new Rectangle(xPos, yPos + height - 2, width, 2);
 		return r;
 	}
 	
 	// top rectangle checks collision with spikes at the top
 	public Rectangle getRectTop() {
-		Rectangle r = new Rectangle(xPos + 2, yPos, 10, 1);
+		Rectangle r = new Rectangle(xPos, yPos, 10, 1);
 		return r;
 	}
 	

@@ -306,6 +306,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				// when an amount of time has passed, the level will increase
 				level++;
 				lbLevel.setText("Level " + level);
+				System.out.println(player.getY());
 			}
 			
 			// if player does not intersect any platforms, he moves down
@@ -313,8 +314,8 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			if (!isOnPlatform())
 				player.moveDown();
 			else {
-				if (player.getY() > 0)
-					player.moveUp();
+				player.moveUp();
+				
 			}
 		}
 
@@ -330,9 +331,9 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				}
 			}
 		}
-		/* Check player's live is zero or not.*/
 		
-		if (player.live == 0 || (player.getY() >= 550 && player.getY() <= 600)) { 
+		/* Check player's live is zero or not.*/
+		if (player.live == 0 || player.getY() >= 600) { 
 			endGame();
 		}
 		repaint();
@@ -346,12 +347,15 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		menu.setEnabled(false);
 		repaint();
 		System.out.println("In start...");
+		System.out.println(player.getWidth());
+		System.out.println(player.getHeight());
 	}
 	
 	public void generatePlatforms() {
 		// NOTICE: Reset the env first then call this function
 		
 		for (int i = 0 ; i < platforms.length; i++) {
+			/* Generate the platform for player to stand on when beginning */
 			if (i == platforms.length / 2) {
 				platforms[3] = new NormalPlatform();
 				platforms[3].setLocation(260, 225);
@@ -360,8 +364,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 
 			platforms[i] = getRandomPlatform(3);
 			platforms[i].setID(System.identityHashCode(platforms[i]));
-
-			platforms[i].setY(45 + i * 60);
+			platforms[i].setY(45 + i * 70);
 		}
 		
 	}
@@ -471,7 +474,6 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			player.changeLive(-5);
 			lbLives.setIcon(new ImageIcon("img/lives" + player.live + ".png"));
 			player.setY(player.getY() + 40);
-			
 		}
 		/*// player intersects with spikes at the top
 		if (p.getRectTop().intersects(ts.getRect())) {
