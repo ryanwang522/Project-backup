@@ -324,7 +324,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				checkCollision(player, platforms[i], platformObjectID);
 				// generate a new platform when it leaves the screen
 				if (platforms[i].getY() + platforms[i].getHeight() <= 0) {
-					platforms[i] = getRandomPlatform(3);
+					platforms[i] = getRandomPlatform(4);
 					platforms[i].setID(System.identityHashCode(platforms[i]));
 				}
 			}
@@ -371,7 +371,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				continue;
 			}
 
-			platforms[i] = getRandomPlatform(3);
+			platforms[i] = getRandomPlatform(4);
 			platforms[i].setID(System.identityHashCode(platforms[i]));
 			platforms[i].setY(45 + i * 70);
 		}
@@ -389,7 +389,10 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			platform = new SpikePlatform();
 		} else if (n == 2) {
 			platform = new SpringPlatform();
-		} else {
+		} else if (n == 3) {
+			platform = new TempPlatform();
+		} 
+		else {
 			platform = new NormalPlatform();
 		}
 		
