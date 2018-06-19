@@ -9,7 +9,7 @@ public class NormalPlatform extends Platform {
 		this.image = new ImageIcon("img/normal_platform.png");
 		this.width = image.getIconWidth();
 		this.height = image.getIconHeight();
-		xPos = rand.nextInt(605 - width);
+		xPos = rand.nextInt(605 - width);;
 		yPos = 550;
 	}
 	

@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class Player {
 	private ImageIcon imgPlayerEast, imgPlayerWest, imgInjuredEast, imgInjuredWest;
-	private int xPos, yPos, height, width, curDirection;
-	protected int live = 12, previousPlatform = -1;
+	private int xPos, yPos, height, width;
+	protected int live = 12, previousPlatform = -1, curDirection;
 	public static final int EAST = 1, WEST = 0;
 	public boolean isInjured;
 	
@@ -48,6 +48,7 @@ public class Player {
 	
 	public void moveDown() {
 		yPos++;
+
 	}
 	
 	public void moveUp() {
@@ -76,13 +77,6 @@ public class Player {
 	}
 	
 	public void changeLive(int changeNumber, int platformID) {
-		/*System.out.print("current platfromID: ");
-		System.out.println(platformID);
-		System.out.print("previousPlatform: ");
-		System.out.println(this.previousPlatform);
-		System.out.print("Live: ");
-		System.out.println(this.live);*/
-
 		if (platformID != this.previousPlatform ) this.live += changeNumber; 
 		if (this.live > 12) this.live = 12;
 		if (this.live < 0 ) this.live = 0;
@@ -90,7 +84,7 @@ public class Player {
 	
 	// bottom rectangle checks collision with platforms
 	public Rectangle getRectBottom() {
-		Rectangle r = new Rectangle(xPos, yPos + height - 2, width, 2);
+		Rectangle r = new Rectangle(xPos, yPos + height, width/2, 2);
 		return r;
 	}
 	

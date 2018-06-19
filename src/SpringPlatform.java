@@ -33,7 +33,7 @@ public class SpringPlatform extends Platform implements ActionListener {
 	}
 	
 	public void resetJump() {
-		velocity = -27;
+		velocity = -27; 
 		t = 0;
 		initialPos = currPlayer.getY();
 		timer.start();
@@ -41,14 +41,16 @@ public class SpringPlatform extends Platform implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		if (e.getSource() == timer) {
 			t++;
-			if (velocity < 0) {
+			/* -14 is a try-and-error result */
+			if (velocity < -14) {
 				currPlayer.setY(this.initialPos + velocity * t + (int)Math.round(0.5 * a * t * t));
-				velocity = velocity + a * t;
-			} else 
+				velocity = velocity + a * 1;
+			} else{
+				//System.out.println("stop");
 				timer.stop();
+			}
 		}
 	}
 }

@@ -21,5 +21,6 @@ public class SpikePlatform extends Platform {
 	@Override
 	public void interactWithPlayer(Player p) {
 		p.changeLive(-5, this.id);
+		p.isInjured = true;
 	}
 }

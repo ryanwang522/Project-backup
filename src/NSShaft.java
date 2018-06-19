@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.Timer;
 import java.io.*;
 
@@ -10,13 +9,13 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	private JLabel lbLives, lbLevel, lbChoosedDifficulty, lbRecord;
 	private JButton btnHelp, btnPlay, btnExit, btnClearRecord;
 	private int level = 0, lives = 12, seconds = 0, bestLevel = 0, s = 0,
-			platformPlayerIsOn = -1;
+			platformPlayerIsOn = -1, prevSec = 0;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JRadioButtonMenuItem rbEasy, rbMedium, rbHard;
 	private JCheckBoxMenuItem cbSpring, cbTemp, cbRolling;
 	private Player player;
-	private boolean start = false, moveRight = false, moveLeft = false, pause = false;
+	private boolean start = false, moveRight = false, moveLeft = false, pause = false, isSet = false;
 	private Timer gameTimer, platformTimer;
 	private Platform[] platforms;
 	private static final int platformTypes = 5;
@@ -306,12 +305,11 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				// when an amount of time has passed, the level will increase
 				level++;
 				lbLevel.setText("Level " + level);
-				System.out.println(player.getY());
 			}
 			
 			// if player does not intersect any platforms, he moves down
 			// else if player intersects any platforms, he moves up
-			if (!isOnPlatform())
+			if (isOnPlatform() == -1)
 				player.moveDown();
 			else {
 				player.moveUp();
@@ -332,6 +330,19 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		
+		/* Show injured image */
+		if (player.isInjured) {
+			if (!isSet) {
+				isSet = true;
+				prevSec = seconds;
+			}
+			else 
+				if (seconds - prevSec >= 10) {
+					player.isInjured = false;
+					isSet = false;
+				}
+		}
+		
 		/* Check player's live is zero or not.*/
 		if (player.live == 0 || player.getY() >= 600) { 
 			endGame();
@@ -347,8 +358,6 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		menu.setEnabled(false);
 		repaint();
 		System.out.println("In start...");
-		System.out.println(player.getWidth());
-		System.out.println(player.getHeight());
 	}
 	
 	public void generatePlatforms() {
@@ -393,6 +402,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		this.moveRight = false;
 		this.moveLeft = false;
 		this.start = false;
+		this.isSet = false;
 		this.platforms = new Platform[7]; 
 		
 		this.player = new Player();
@@ -404,13 +414,13 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		this.lbLevel.setText("Level " + level);
 	}
 	
-	public boolean isOnPlatform() {
+	public int isOnPlatform() {
 		for (int i = 0; i < platforms.length; i++) {
 			if (player.getRectBottom().intersects(platforms[i].getRect()))
-				return true;
+				return i;
 		}
-		
-		return false;
+
+		return -1;
 	}
 
 	@Override
@@ -422,11 +432,13 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT && !pause) {
 				//p.setDirection(Player.WEST);
 				moveLeft = true;
+				player.curDirection = 0;
 			}
 			// User clicks the right arrow key
 			else if (e.getKeyCode() == KeyEvent.VK_RIGHT && !pause) {
 				//p.setDirection(Player.EAST);
 				moveRight = true;
+				player.curDirection = 1;
 			} else if (e.getKeyCode() == KeyEvent.VK_P) {
 				// if player presses "p" during game, the game pauses
 				if (!pause) {
@@ -463,7 +475,8 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	public void checkCollision(Player player, Platform platform, int platformIndex) {
 		
 		/* Player interacts with platform */
-		if (platform.getRect().intersects(player.getRectBottom())) {
+		if (platform.getRect().intersects(player.getRectBottom()) ) {
+			//System.out.println("intersect platform: " + platformIndex);
 			platform.interactWithPlayer(player);
 			player.previousPlatform = platformIndex;
 			lbLives.setIcon(new ImageIcon("img/lives" + player.live + ".png"));
@@ -475,104 +488,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			lbLives.setIcon(new ImageIcon("img/lives" + player.live + ".png"));
 			player.setY(player.getY() + 40);
 		}
-		/*// player intersects with spikes at the top
-		if (p.getRectTop().intersects(ts.getRect())) {
-			lives -= 5;
-			lblLives.setIcon(new ImageIcon("images\\lives" + lives + ".png"));
-			if (lives <= 0) {
-				lblLives.setIcon(new ImageIcon("images\\lives0.png"));
-				endGame();
-			}
-			p.setY(p.getY() + 40);
-			btnPlay.setEnabled(true);
-		}
-		// player intersects with platforms
-		for (int i = 0; i < platforms.length; i++) {
-			if (platforms[i].getRect().intersects(p.getRectBottom())) {
-				if (platforms[i].getType().equals("normal") && lives < 12) {
-					// player adds 1 life when intersecting with all platforms
-					// except spike platforms
-					// make sure the life is only added by 1
-					if (platformPlayerIsOn != i) {
-						lives++;
-					}
-					platformPlayerIsOn = i;
-					lblLives.setIcon(new ImageIcon("images\\lives" + lives
-							+ ".png"));
-				} else if (platforms[i].getType().equals("spike")) {
-					// player minuses 5 lives when intersecting with spike
-					// platforms
-					if (platformPlayerIsOn != i) {
-						p.isInjured = true;
-						s = seconds + 40;
-						lives -= 5;
-						lblLives.setIcon(new ImageIcon("images\\lives" + lives
-								+ ".png"));
-						if (lives <= 0) {
-							lblLives.setIcon(new ImageIcon("images\\lives0.png"));
-							endGame();
-						}
-						platformPlayerIsOn = i;
-
-					}
-					// player changes image when he intersects with spike
-					// platform
-					if (s - seconds < 10) {
-						p.isInjured = false;
-					}
-				} else if (platforms[i].getType().equals("rolling")) {
-					if (lives < 12) {
-						if (platformPlayerIsOn != i) {
-							lives++;
-						}
-						platformPlayerIsOn = i;
-						lblLives.setIcon(new ImageIcon("images\\lives" + lives
-								+ ".png"));
-					}
-					if (seconds % 7 == 0) {
-						// player moves when he is on a rolling platform
-						if (platforms[i].getDirection() == 0) {
-							p.setX(p.getX() - 1);
-						} else {
-							p.setX(p.getX() + 1);
-						}
-					}
-				} else if (platforms[i].getType().equals("spring")) {
-					if (lives < 12) {
-						if (platformPlayerIsOn != i) {
-							lives++;
-						}
-						platformPlayerIsOn = i;
-						lblLives.setIcon(new ImageIcon("images\\lives" + lives
-								+ ".png"));
-					}
-					// player jumps
-					p.setY(p.getY() - 50);
-				} else if (platforms[i].getType().equals("temp")) {
-					if (platformPlayerIsOn != i) {
-						s = seconds + 70;
-						platformPlayerIsOn = i;
-					}
-					if (lives < 12) {
-						if (platformPlayerIsOn != i) {
-							lives++;
-						}
-
-						lblLives.setIcon(new ImageIcon("images\\lives" + lives
-								+ ".png"));
-					}
-					// player moves down a little and the temporary platform
-					// disappears
-					if (s - seconds < 10) {
-						p.setY(p.getY() + 5);
-						platforms[i].imgPlatform = new ImageIcon("");
-					}
-				}
-			}
-		}
-		if (p.getY() >= 430 && p.getY() <= 450) {
-			endGame();
-		}*/
+		
 	}
 
 	public void endGame() {
