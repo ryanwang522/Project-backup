@@ -505,22 +505,22 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		gameTimer.stop();
 		if (level == 1) {
 			JOptionPane.showMessageDialog(null, "You have completed " + level
-					+ " level.", "NS-Shaftt", JOptionPane.INFORMATION_MESSAGE);
+					+ " level.", "NS-Shaft", JOptionPane.INFORMATION_MESSAGE);
 		} else if (level != 1) {
 			JOptionPane.showMessageDialog(null, "You have completed " + level
-					+ " levels.", "NS-Shaftt", JOptionPane.INFORMATION_MESSAGE);
+					+ " levels.", "NS-Shaft", JOptionPane.INFORMATION_MESSAGE);
 		}
 		// if player breaks the record
 		if (level > bestLevel) {
 			if (level != 1) {
 				JOptionPane.showMessageDialog(null,
 						"Congratulations! You have set a new record of "
-								+ level + " levels!", "NS-Shaftt",
+								+ level + " levels!", "NS-Shaft",
 						JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"Congratulations! You have set a new record of "
-								+ level + " level!", "NS-Shaftt",
+								+ level + " level!", "NS-Shaft",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 			bestLevel = level;

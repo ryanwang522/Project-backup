@@ -5,7 +5,7 @@ import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TempPlatform extends Platform implements ActionListener{
+public class TempPlatform extends Platform implements ActionListener {
 	
 	private Random rand = new Random();
 	private Timer timer = new Timer(40, this);
@@ -29,7 +29,7 @@ public class TempPlatform extends Platform implements ActionListener{
 	public void interactWithPlayer(Player p) {
 		p.changeLive(1, this.id);
 		currPlayer = p;
-		if(firstTouch == 0) {
+		if (firstTouch == 0) {
 			this.resetDown();
 			firstTouch = 1;
 		}
@@ -45,9 +45,10 @@ public class TempPlatform extends Platform implements ActionListener{
 		
 		if (e.getSource() == timer) {
 			t++;
-			if (t > 20) {
-				currPlayer.setY(currPlayer.getY() + 30);
+			if (t > 10) {
+				currPlayer.setY(currPlayer.getY() + 25);
 				timer.stop();
+				this.firstTouch = 0;
 				t = 0;
 			} 
 		}
