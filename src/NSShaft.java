@@ -21,6 +21,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	private static final int platformTypes = 5;
 	private Random rnd;
 	private TopSpike topSpike;
+	private Background background;
 	private File highscores = new File("highscores.txt");
 	private String name = "", line = "";
 
@@ -31,34 +32,45 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	public NSShaft() {
 		// lives
 		lbLives = new JLabel();
-		lbLives.setPreferredSize(new Dimension(140, 85));
+		lbLives.setPreferredSize(new Dimension(100, 85));
 		lbLives.setHorizontalAlignment(SwingConstants.CENTER);
 		lbLives.setIcon(new ImageIcon("img/lives" + lives + ".png"));
 
 		// level
 		lbLevel = new JLabel();
-		lbLevel.setFont(new Font("Times New Roman", Font.BOLD, 36));
-		lbLevel.setForeground(Color.YELLOW);
+		lbLevel.setFont(new Font("Century Gothic", Font.BOLD, 36));
+		Color cf1 = new Color(216, 224, 66);
+		lbLevel.setForeground(cf1);
 		lbLevel.setText("Level " + level);
-		lbLevel.setPreferredSize(new Dimension(290, 30));
+		lbLevel.setPreferredSize(new Dimension(140, 30));
 		lbLevel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// title
 		JLabel lbTitle = new JLabel();
-		Font f2 = new Font("Britannic Bold", Font.PLAIN, 36);
-		lbTitle.setFont(f2);
-		Color c1 = new Color(122, 122, 122);
-		lbTitle.setForeground(c1);
-		lbTitle.setText("NS-Shaft");
-		lbTitle.setPreferredSize(new Dimension(190, 30));
+		lbTitle = new JLabel();
+		lbTitle.setPreferredSize(new Dimension(400, 85));
 		lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lbTitle.setIcon(new ImageIcon("img/title.png"));
+		/*Font f2 = new Font("Britannic Bold", Font.PLAIN, 36);
+		lbTitle.setFont(f2);*/
+		Color c1 = new Color(122, 122, 122);
+	/*	lbTitle.setForeground(c1);
+		String pathtitle="img/title.png";
+		Icon icontitle=new ImageIcon(pathtitle); 
+		lbTitle.setIcon(icontitle);
+		//lbTitle.setText("Lolita");
+		lbTitle.setPreferredSize(new Dimension(190, 30));
+		lbTitle.setHorizontalAlignment(SwingConstants.CENTER);*/
 
 		// difficulty
 		JLabel lbDifficulty = new JLabel();
-		Font f3 = new Font("Britannic Bold", Font.PLAIN, 24);
+		Font f3 = new Font("Calibri", Font.PLAIN, 24);
 		lbDifficulty.setFont(f3);
 		lbDifficulty.setForeground(c1);
-		lbDifficulty.setText("DIFFICULTY:");
+		String pathDifficulty="img/difficulty.png";
+		Icon iconDifficulty=new ImageIcon(pathDifficulty); 
+		lbDifficulty.setIcon(iconDifficulty);
+		//lbDifficulty.setText("DIFFICULTY:");
 		lbDifficulty.setPreferredSize(new Dimension(190, 25));
 		lbDifficulty.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lbChoosedDifficulty = new JLabel();
@@ -66,20 +78,26 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		lbChoosedDifficulty.setForeground(c1);
 		lbChoosedDifficulty.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lbChoosedDifficulty.setPreferredSize(new Dimension(190, 25));
-		lbChoosedDifficulty.setText("Medium");
+		String pathMediumDifficulty="img/medium.png";
+		Icon iconMediumDifficulty=new ImageIcon(pathMediumDifficulty); 
+		lbChoosedDifficulty.setIcon(iconMediumDifficulty);
+		//lbChoosedDifficulty.setText("Medium");
 
 		// highest record
 		JLabel lbRecordTitle = new JLabel();
 		lbRecordTitle.setFont(f3);
 		lbRecordTitle.setForeground(c1);
 		lbRecordTitle.setPreferredSize(new Dimension(190, 25));
-		lbRecordTitle.setText("RECORD:");
+		String pathRecord="img/record.png";
+		Icon iconRecord=new ImageIcon(pathRecord); 
+		lbRecordTitle.setIcon(iconRecord);
 		lbRecordTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		lbRecord = new JLabel();
 		lbRecord.setText("0");
 		lbRecord.setFont(f3);
-		lbRecord.setForeground(c1);
+		Color c2 = new Color(217, 85, 28);
+		lbRecord.setForeground(c2);
 		lbRecord.setPreferredSize(new Dimension(190, 25));
 		lbRecord.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
@@ -98,19 +116,38 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		}
 		
 		// JButtons
-		btnClearRecord = new JButton("CLEAR RECORD");
+		String pathClear="img/clear.png";
+		Icon iconClear=new ImageIcon(pathClear);  
+		btnClearRecord = new JButton(iconClear);
+		btnClearRecord.setBorder(null);
+		btnClearRecord.setContentAreaFilled(false);
 		btnClearRecord.setFocusable(false);
 		btnClearRecord.addActionListener(this);
 
-		btnHelp = new JButton("HELP");
+		String pathHelp="img/help.png";
+		Icon iconHelp=new ImageIcon(pathHelp);  
+		btnHelp = new JButton(iconHelp);
+		btnHelp.setBorder(null);
+		btnHelp.setContentAreaFilled(false);
 		btnHelp.setFocusable(false);
+	//	btnHelp.setLocation(10,20);
 		btnHelp.addActionListener(this);
 
-		btnPlay = new JButton("PLAY");
+		String pathPlay="img/play.png";
+		btnPlay = new JButton(pathPlay);
+		Icon iconPlay=new ImageIcon(pathPlay);  
+		btnPlay = new JButton(iconPlay);
+		btnPlay.setBorder(null);
+		btnPlay.setContentAreaFilled(false);
 		btnPlay.setFocusable(false);
 		btnPlay.addActionListener(this);
-
-		btnExit = new JButton("EXIT");
+		
+		String pathExit="img/exit.png";
+		btnExit = new JButton(pathExit);
+		Icon iconExit=new ImageIcon(pathExit);  
+		btnExit = new JButton(iconExit);
+		btnExit.setBorder(null);
+		btnExit.setContentAreaFilled(false);
 		btnExit.setFocusable(false);
 		btnExit.addActionListener(this);
 
@@ -158,35 +195,37 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		gameTimer = new Timer(3, this);
 		rnd = new Random();
 		topSpike = new TopSpike();
+		background =new Background();
 
 		// panels
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 40, 20));
-		topPanel.setBackground(Color.BLACK);
+		Color rgb = new Color(56, 56, 56);
+		topPanel.setBackground(rgb);
 		topPanel.add(lbLives);
 		topPanel.add(lbLevel);
 		topPanel.add(lbTitle);
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		rightPanel.setBackground(Color.BLACK);
-		rightPanel.add(Box.createVerticalStrut(50));
+		rightPanel.setBackground(rgb);
+		//rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbDifficulty);
-		rightPanel.add(Box.createVerticalStrut(10));
+		//rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbChoosedDifficulty);
+		rightPanel.add(Box.createVerticalStrut(30));
+		rightPanel.add(btnHelp);
+		rightPanel.add(Box.createVerticalStrut(10));
+		rightPanel.add(btnPlay);
+		rightPanel.add(Box.createVerticalStrut(10));
+		rightPanel.add(btnExit);
 		rightPanel.add(Box.createVerticalStrut(50));
 		rightPanel.add(lbRecordTitle);
 		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbRecord);
 		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(btnClearRecord);
-		rightPanel.add(Box.createVerticalStrut(70));
-		rightPanel.add(btnHelp);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(btnPlay);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(btnExit);
 
-		setBackground(Color.black);
+		//setBackground(Color.black);
 		setFocusable(true);
 		setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
 		addKeyListener(this);
@@ -194,7 +233,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(rightPanel, BorderLayout.EAST);
 		frame.add(this, BorderLayout.CENTER);
-		frame.setTitle("NS-Shaft");
+		frame.setTitle("Lolita");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setSize(810, 710);
@@ -206,6 +245,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
+		background.draw(g2);
 		if (start) {
 			player.draw(g2);
 			for (int i = 0; i < platforms.length; i++) {
@@ -273,11 +313,20 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				System.exit(0);
 			}
 		} else if (rbEasy.isSelected()) {
-			lbChoosedDifficulty.setText("Easy");
+			String pathEasyDifficulty="img/easy.png";
+			Icon iconEasyDifficulty=new ImageIcon(pathEasyDifficulty); 
+			lbChoosedDifficulty.setIcon(iconEasyDifficulty);
+			//lbChoosedDifficulty.setText("Easy");
 		} else if (rbMedium.isSelected()) {
-			lbChoosedDifficulty.setText("Medium");
+			String pathMediumDifficulty="img/medium.png";
+			Icon iconMediumDifficulty=new ImageIcon(pathMediumDifficulty); 
+			lbChoosedDifficulty.setIcon(iconMediumDifficulty);
+			//lbChoosedDifficulty.setText("Medium");
 		} else if (rbHard.isSelected()) {
-			lbChoosedDifficulty.setText("Hard");
+			String pathHardDifficulty="img/hard.png";
+			Icon iconHardDifficulty=new ImageIcon(pathHardDifficulty); 
+			lbChoosedDifficulty.setIcon(iconHardDifficulty);
+			//lbChoosedDifficulty.setText("Hard");
 		}
 		
 		if (arg0.getSource() == gameTimer) {
