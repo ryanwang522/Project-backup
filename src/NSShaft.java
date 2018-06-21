@@ -7,7 +7,7 @@ import java.io.*;
 
 public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	private JLabel lbLives, lbLevel, lbChoosedDifficulty, lbRecord;
-	private JButton btnHelp, btnPlay, btnExit, btnClearRecord;
+	private JButton btnHelp, btnPlay, btnExit, btnDual, btnClearRecord;
 	private int level = 0, lives = 12, seconds = 0, bestLevel = 0, s = 0,
 			platformPlayerIsOn = -1, prevSec = 0;
 	private JMenuBar menuBar;
@@ -142,6 +142,15 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		btnPlay.setFocusable(false);
 		btnPlay.addActionListener(this);
 		
+		String pathDual="img/dual.png";
+		btnDual = new JButton(pathDual);
+		Icon iconDual=new ImageIcon(pathDual);  
+		btnDual = new JButton(iconDual);
+		btnDual.setBorder(null);
+		btnDual.setContentAreaFilled(false);
+		btnDual.setFocusable(false);
+		btnDual.addActionListener(this);
+		
 		String pathExit="img/exit.png";
 		btnExit = new JButton(pathExit);
 		Icon iconExit=new ImageIcon(pathExit);  
@@ -156,6 +165,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		btnHelp.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnPlay.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnExit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnDual.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		// JMenu
 		menuBar = new JMenuBar();
@@ -212,13 +222,15 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 		rightPanel.add(lbDifficulty);
 		//rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbChoosedDifficulty);
-		rightPanel.add(Box.createVerticalStrut(30));
+		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(btnHelp);
 		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(btnPlay);
 		rightPanel.add(Box.createVerticalStrut(10));
+		rightPanel.add(btnDual);
+		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(btnExit);
-		rightPanel.add(Box.createVerticalStrut(50));
+		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbRecordTitle);
 		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(lbRecord);
