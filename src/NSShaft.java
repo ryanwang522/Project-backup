@@ -18,7 +18,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	private boolean start = false, moveRight = false, moveLeft = false, pause = false, isSet = false;
 	private Timer gameTimer, platformTimer;
 	private Platform[] platforms;
-	private static final int platformTypes = 5;
+	private static final int platformTypes = 6;
 	private Random rnd;
 	private TopSpike topSpike;
 	private Background background;
@@ -385,7 +385,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				checkCollision(player, platforms[i], platformObjectID);
 				// generate a new platform when it leaves the screen
 				if (platforms[i].getY() + platforms[i].getHeight() <= 0) {
-					platforms[i] = getRandomPlatform(4);
+					platforms[i] = getRandomPlatform(6);
 					platforms[i].setID(System.identityHashCode(platforms[i]));
 				}
 			}
@@ -432,7 +432,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 				continue;
 			}
 
-			platforms[i] = getRandomPlatform(4);
+			platforms[i] = getRandomPlatform(6);
 			platforms[i].setID(System.identityHashCode(platforms[i]));
 			platforms[i].setY(45 + i * 70);
 		}
@@ -441,7 +441,7 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 	
 	public Platform getRandomPlatform(int numOfType) {
 		Platform platform = null;
-		if (numOfType > 5) numOfType = 5;
+		if (numOfType > 6) numOfType = 6;
 		
 		int n = rnd.nextInt(numOfType);
 		if (n == 0) {
@@ -452,7 +452,11 @@ public class NSShaft extends JPanel implements ActionListener, KeyListener {
 			platform = new SpringPlatform();
 		} else if (n == 3) {
 			platform = new TempPlatform();
-		} 
+		} else if (n == 4) {
+			platform = new RollingLeftPlatform();
+		} else if (n == 5) {
+			platform = new RollingRightPlatform();
+		}
 		else {
 			platform = new NormalPlatform();
 		}
