@@ -51,6 +51,12 @@ public class TempPlatform extends Platform implements ActionListener {
 				this.firstTouch = 0;
 				t = 0;
 			} 
+			if ((currPlayer.getX()+currPlayer.getWidth()) < this.xPos+1 || currPlayer.getX()> (this.xPos+this.width-1)) {
+				timer.stop();
+			}
+			if (currPlayer.getY() > this.yPos) {
+				timer.stop();
+			}
 		}
 	}
 }
