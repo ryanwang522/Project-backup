@@ -10,14 +10,14 @@ public class GameEngine extends JPanel implements ActionListener {
 	private JButton btnHelp, btnPlay, btnExit, btnClearRecord;
 	private int level = 0, lives = 12, seconds = 0, bestLevel = 0, s = 0,
 			platformPlayerIsOn = -1, prevSec = 0, winner = -1;
-	private Player[] players;
+	private Player[] players = new Player[2];
 	private boolean start = false, moveRight = false, moveLeft = false, pause = false, isSet = false;
 	private Timer gameTimer, platformTimer;
-	private Platform[] platforms;
+	private Platform[] platforms = new Platform[7];
 	private static final int platformTypes = 5;
 	private Random rnd;
-	private TopSpike topSpike;
-    private InfoPacket infoPacket = new InfoPacket(this.players, this.platforms, this.start, this.winner);
+	private TopSpike topSpike = new TopSpike();
+    private InfoPacket infoPacket;
 
 
     public GameEngine() {
@@ -80,7 +80,6 @@ public class GameEngine extends JPanel implements ActionListener {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBackground(Color.BLACK);
-        rightPanel.setBackground(Color.BLACK);
 		rightPanel.add(Box.createVerticalStrut(10));
 		rightPanel.add(btnClearRecord);
 		rightPanel.add(Box.createVerticalStrut(70));
@@ -108,15 +107,36 @@ public class GameEngine extends JPanel implements ActionListener {
 
         /* Game timer */
         gameTimer = new Timer(3, this);
+        platformTimer = new Timer(10, this);
 		rnd = new Random();
-        topSpike = new TopSpike();
+        //topSpike = new TopSpike();
         
         /* Initialize players */
-        for (int i = 0; i < players.length; i++)
-            players[i] = new Player();
+        this.players = new Player[2];
+        for (int i = 0; i < 2; i++)
+            this.players[i] = new Player();
+
+        generatePlatforms();
+        infoPacket = new InfoPacket(this.players, this.platforms, this.start, this.winner);
+ 
+        //gameStart();
     }
 
+    public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		if (start) {
+            infoPacket.players[0].draw(g2);
+            infoPacket.players[1].draw(g2);
+			for (int i = 0; i < platforms.length; i++) {
+				platforms[i].draw(g2);
+			}
+		}
+		topSpike.draw(g2);
+	}
+
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == gameTimer) {
 
             seconds++;
@@ -125,59 +145,77 @@ public class GameEngine extends JPanel implements ActionListener {
                 lbLevel.setText("Level" + level);
             }
 
-            for (int i = 0; i < players.length; i++) {
-                Player player = players[i];
+            
+            for (int i = 0; i < infoPacket.players.length; i++) {
+                Player player = infoPacket.players[i];
                 int x = player.getX();
 
                 // TODO: set player.curDirection when recive move action from client
                 // current direction 1 -> move right, 0 -> move left
                 if (player.curDirection == 1)
                     if (x < 605 - player.getWidth()) player.setX(++x);
-                else if (player.curDirection == 0)
+                
+                if (player.curDirection == 0) {
+                    //System.out.println("x = " + x);
                     if (x > 5) player.setX(--x);
-
+                }
+                
+                
                 // if player does not intersect any platforms, he moves down
                 // else if player intersects any platforms, he moves up
-                checkCurrentPlatform(player);
-                if (player.curPlatform == -1)
-                    player.moveDown();
+                checkCurrentPlatform(infoPacket.players[i]);
+                if (infoPacket.players[i].curPlatform == -1){
+                    infoPacket.players[i].moveDown();
+                }
                 else 
-                    player.moveUp();
+                    infoPacket.players[i].moveUp();
+                
+                this.players[i] = infoPacket.players[i];
+
             }
 
         }
 
         if (e.getSource() == platformTimer) {
-            for (int i = 0; i < platforms.length; i++) {
-				platforms[i].move();
-				int platformObjectID = System.identityHashCode(platforms[i]);
-                checkCollision(players[0], platforms[i], platformObjectID);
-                checkCollision(players[1], platforms[i], platformObjectID);
-				// generate a new platform when it leaves the screen
-				if (platforms[i].getY() + platforms[i].getHeight() <= 0) {
-					platforms[i] = getRandomPlatform(4);
-					platforms[i].setID(System.identityHashCode(platforms[i]));
-				}
-			}
+            for (int i = 0; i < this.platforms.length; i++) {
+                if (this.platforms[i] != null){
+                    platforms[i].move();
+                    int platformObjectID = System.identityHashCode(platforms[i]);
+                    checkCollision(this.players[0], this.platforms[i], platformObjectID);
+                    checkCollision(this.players[1], this.platforms[i], platformObjectID);
+                    // generate a new platform when it leaves the screen
+                    if (this.platforms[i].getY() + this.platforms[i].getHeight() <= 0) {
+                        this.platforms[i] = getRandomPlatform(4);
+                        this.platforms[i].setID(System.identityHashCode(this.platforms[i]));
+                    }
+                }
+                
+            }
+            this.infoPacket.updateEnv(this.platforms);
         }
 
-        /* Check player's live is zero or not.*/
+        /*Check player's live is zero or not.*/
         for (int i = 0; i < players.length; i++)
 		    if (players[i].live == 0 || players[i].getY() >= 600) {
                 winner = ~i;
                 endGame();
                 break;
             }
-
+        
         /* Update current game info */
-        this.infoPacket.update(this.start, this.winner);
+        this.infoPacket.update(this.winner);
+        
+
+        repaint();
     }
 
     public void gameStart() {
 		resetEnv();
 		this.start = true;
 		generatePlatforms();
-		gameTimer.restart();
+        gameTimer.restart();
+        platformTimer.restart();
+        repaint();
 		System.out.println("In start...");
 	}
 
@@ -238,9 +276,10 @@ public class GameEngine extends JPanel implements ActionListener {
 
     /* Check whether a player p stands on a platform */
     public void checkCurrentPlatform(Player p) {
+        if (p == null) return;
         p.curPlatform = -1;
         for (int i = 0; i < platforms.length; i++) 
-			if (p.getRectBottom().intersects(platforms[i].getRect())) {
+			if (platforms[i] != null && p.getRectBottom().intersects(platforms[i].getRect())) {
                 p.curPlatform = i;
                 return;
             }
@@ -268,7 +307,7 @@ public class GameEngine extends JPanel implements ActionListener {
         start = false;
         platformTimer.stop();
         gameTimer.stop();
-        this.infoPacket.update(this.start, this.winner);
+        this.infoPacket.update(this.winner);
     }
 
     public InfoPacket getInfoPacket() {
@@ -277,7 +316,10 @@ public class GameEngine extends JPanel implements ActionListener {
 
     public static void main(String[] args) {
         GameEngine env = new GameEngine();
-        new GameServer(8765, env.getInfoPacket());
+        GameServer gs = new GameServer(8000, env.getInfoPacket());
+        System.out.println("In main");
+        while(!gs.isGameStart) {}
+        env.gameStart();
     }
 }
 

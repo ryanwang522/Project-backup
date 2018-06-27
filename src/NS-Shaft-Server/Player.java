@@ -1,18 +1,19 @@
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.io.Serializable;
+
 import javax.swing.*;
 
-public class Player {
+public class Player implements Serializable {
 	private ImageIcon imgPlayerEast, imgPlayerWest, imgInjuredEast, imgInjuredWest;
 	private int xPos, yPos, height, width;
 	protected int live = 12, previousPlatform = -1, curDirection, curPlatform = -1;
 	public static final int EAST = 1, WEST = 0;
 	public boolean isInjured;
-	
-	// TODO: Add a attribute for current platform
+	public static final long serialVersionUID = 1L;
 	
 	public Player() {
-		this.curDirection = EAST;
+		this.curDirection = -1;
 		this.curPlatform = -1;
 		this.imgPlayerEast = new ImageIcon("img/caveman" + EAST + ".png");
 		this.imgPlayerWest = new ImageIcon("img/caveman" + WEST + ".png");
